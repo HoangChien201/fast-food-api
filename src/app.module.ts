@@ -27,13 +27,17 @@ import { CartDetail } from './cart-detail/entities/cart-detail.entity';
 import { OrderTracking } from './order-tracking/entities/order-tracking.entity';
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath:'.env',
+      isGlobal:true
+    }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '',
-      database: 'restaurant',
+      host: process.env.DATABASE_HOST,
+      port: parseInt(process.env.DATABASE_PORT),
+      username: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_DBNAME,
       entities: [User,Product,Category,Favorite,OrderDetail,Order,CartDetail,OrderTracking],
       synchronize: true,
     }),
