@@ -10,7 +10,7 @@ async function bootstrap() {
   app.enableCors()
   console.log(process.env.PORT);
   
-  await app.listen(process.env.PORT);
+  await app.listen(parseInt(process.env.PORT));
 
   if (module.hot) {
     module.hot.accept();
