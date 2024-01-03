@@ -48,7 +48,8 @@ import { OrderTracking } from './order-tracking/entities/order-tracking.entity';
     OrderDetailModule,
     FavoriteModule,
     OrderTrackingModule,
-    OrderModule
+    OrderModule,
+    AuthModule
   ],
   controllers: [AppController,],
   providers: [AppService],

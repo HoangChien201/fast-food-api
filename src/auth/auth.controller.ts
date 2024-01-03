@@ -6,11 +6,11 @@ import { AuthGuard } from './auth.guard';
 export class AuthController {
     constructor(private authService:AuthService){}
 
-    // @HttpCode(HttpStatus.OK)
-    // @Post('sign-in')
-    // async login(@Body() signInDto:Record<string,any> ){
-    //     return this.authService.signIn(signInDto.email,signInDto.password);
-    // }
+    @HttpCode(HttpStatus.OK)
+    @Post('sign-in')
+    async login(@Body() signInDto:Record<string,any> ){
+        return this.authService.signIn(signInDto.email,signInDto.password);
+    }
 
     // @HttpCode(HttpStatus.OK)
     // @Post('sign-in-admin')
