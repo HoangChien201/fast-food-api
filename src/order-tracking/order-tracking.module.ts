@@ -8,5 +8,6 @@ import { OrderTracking } from './entities/order-tracking.entity';
   imports:[TypeOrmModule.forFeature([OrderTracking])],
   controllers: [OrderTrackingController],
   providers: [OrderTrackingService],
+  exports:[TypeOrmModule,OrderTrackingService]
 })
 export class OrderTrackingModule {}

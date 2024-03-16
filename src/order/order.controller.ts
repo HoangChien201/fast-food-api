@@ -9,7 +9,7 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post()
-  create(@Body() createOrderDto: CreateOrderDto):Promise<Order> {
+  create(@Body() createOrderDto: CreateOrderDto):Promise<Order | string> {
     return this.orderService.create(createOrderDto);
   }
 
@@ -31,11 +31,6 @@ export class OrderController {
   @Get('/order-by-date?')
   findOrderByDate(@Query('date-start') dateStart: string,@Query('date-end') dateEnd: string):Promise<Order[]> {
     return this.orderService.findOrderByDate(dateStart,dateEnd);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto):Promise<Order> {
-    return this.orderService.update(+id, updateOrderDto);
   }
 
   @Delete(':id')

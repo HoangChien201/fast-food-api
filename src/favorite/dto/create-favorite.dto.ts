@@ -1,1 +1,4 @@
-export class CreateFavoriteDto {}
+export class CreateFavoriteDto {
+    user_id:number;
+    product_id:number;
+}

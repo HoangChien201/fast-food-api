@@ -31,13 +31,6 @@ export class User {
     @Column()
     address:string;
 
-    @OneToMany(type => CartDetail,cart_detail => cart_detail.user)
-    cart_details:CartDetail[]
-
-    @OneToMany(type => Favorite,favorite => favorite.user)
-    favorites:Favorite[]
-
     @OneToMany(type => Order,order=>order.user)
     orders:Order[]
-
 }

@@ -1,18 +1,18 @@
 import { Product } from "src/product/entities/product.entity";
 import { User } from "src/user/entities/user.entity";
-import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToMany, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class CartDetail {
-    @PrimaryGeneratedColumn()
-    id:number
+    @PrimaryColumn()
+    product_id:number
 
-    @OneToOne(type => Product)
-    product:Product
-
-    @OneToMany(type => User,user => user.cart_details)
-    user:User
+    @PrimaryColumn()
+    user_id:number
 
     @Column()
     instruction:string
+
+    @Column()
+    quantity:number
 }

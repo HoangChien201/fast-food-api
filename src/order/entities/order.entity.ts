@@ -1,24 +1,27 @@
 import { OrderDetail } from "src/order-detail/entities/order-detail.entity";
 import { User } from "src/user/entities/user.entity";
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Order {
     @PrimaryGeneratedColumn()
-    id:number
+    id: number
 
-    @ManyToOne(type => User,user => user.orders)
-    user:User
+    @ManyToOne(type => User, user => user.orders)
+    user: User | number
 
-    @OneToMany(type => OrderDetail,order_detail => order_detail.order)
-    order_details:OrderDetail[]
-
-    @Column({type:Date})
-    order_date:Date
+    @CreateDateColumn()// Recommended
+    order_date: Date;
 
     @Column()
-    payment:string
+    payment: boolean
 
     @Column()
-    address:string
+    address: string
+
+    @Column()
+    methodPayment:string
+    
+    @Column()
+    expectedTime:string
 }

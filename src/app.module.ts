@@ -25,6 +25,9 @@ import { OrderDetail } from './order-detail/entities/order-detail.entity';
 import { Order } from './order/entities/order.entity';
 import { CartDetail } from './cart-detail/entities/cart-detail.entity';
 import { OrderTracking } from './order-tracking/entities/order-tracking.entity';
+import { PaymentMomoModule } from './payment-momo/payment-momo.module';
+import { MessageModule } from './message/message.module';
+import { Message } from './message/entities/message.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -38,7 +41,7 @@ import { OrderTracking } from './order-tracking/entities/order-tracking.entity';
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_DBNAME,
-      entities: [User,Product,Category,Favorite,OrderDetail,Order,CartDetail,OrderTracking],
+      entities: [User,Product,Category,Favorite,OrderDetail,Order,CartDetail,OrderTracking,Message],
       synchronize: true,
     }),
     UserModule,
@@ -49,7 +52,9 @@ import { OrderTracking } from './order-tracking/entities/order-tracking.entity';
     FavoriteModule,
     OrderTrackingModule,
     OrderModule,
-    AuthModule
+    AuthModule,
+    PaymentMomoModule,
+    MessageModule
   ],
   controllers: [AppController,],
   providers: [AppService],

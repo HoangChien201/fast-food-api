@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { FavoriteService } from './favorite.service';
 import { CreateFavoriteDto } from './dto/create-favorite.dto';
 import { UpdateFavoriteDto } from './dto/update-favorite.dto';
@@ -18,14 +18,21 @@ export class FavoriteController {
     return this.favoriteService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string):Promise<Favorite> {
-    return this.favoriteService.findOne(+id);
+  @Get('/get-by-user/:id')
+  findByUser(@Param('id') id:number):Promise<Favorite[]> {
+    return this.favoriteService.findByUser(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFavoriteDto: UpdateFavoriteDto):Promise<Favorite> {
-    return this.favoriteService.update(+id, updateFavoriteDto);
+  //----/get?product=1&user=2
+  @Get('/get?')
+  findOne(@Query('product') product_id: number,@Query('user') user_id: number):Promise<Favorite> {
+    return this.favoriteService.findOne(product_id,user_id);
+  }
+
+  //----/update?product=1&user=2
+  @Patch('/update?')
+  update(@Query('product') product_id: number,@Query('user') user_id: number, @Body() updateFavoriteDto: UpdateFavoriteDto):Promise<Favorite> {
+    return this.favoriteService.update(+product_id,user_id, updateFavoriteDto);
   }
 
   @Delete(':id')

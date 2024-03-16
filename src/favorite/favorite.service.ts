@@ -4,6 +4,7 @@ import { UpdateFavoriteDto } from './dto/update-favorite.dto';
 import { Favorite } from './entities/favorite.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Product } from 'src/product/entities/product.entity';
 
 @Injectable()
 export class FavoriteService {
@@ -20,12 +21,28 @@ export class FavoriteService {
     return await this.favoriteRepository.find();
   }
 
-  async findOne(id: number):Promise<Favorite> {
-    return await this.favoriteRepository.findOneBy({id:id});
+  async findOne(product_id: number,user_id: number):Promise<Favorite> {
+    return await this.favoriteRepository.findOne({where:{
+      product_id:product_id,
+      user_id:user_id
+    }});
   }
 
-  async update(id: number, updateFavoriteDto: UpdateFavoriteDto):Promise<Favorite> {
-    const favorite=await this.favoriteRepository.findOneBy({id:id})
+  async findByUser(user_id: number):Promise<Favorite[]> {
+    const result=await this.favoriteRepository
+    .createQueryBuilder('favorite')
+    .select(['favorite.user_id'])
+    .leftJoinAndMapOne('favorite.product', Product, 'p', 'p.id = favorite.product_id')
+    .where({user_id:user_id})
+    .getMany()
+    return result
+  }
+
+  async update(product_id: number,user_id: number, updateFavoriteDto: UpdateFavoriteDto):Promise<Favorite> {
+    const favorite=await this.favoriteRepository.findOne({where:{
+      product_id:product_id,
+      user_id:user_id
+    }});
     return await this.favoriteRepository.save({
       ...favorite,
       ...updateFavoriteDto

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { OrderTrackingService } from './order-tracking.service';
 import { CreateOrderTrackingDto } from './dto/create-order-tracking.dto';
 import { UpdateOrderTrackingDto } from './dto/update-order-tracking.dto';
@@ -13,23 +13,39 @@ export class OrderTrackingController {
     return this.orderTrackingService.create(createOrderTrackingDto);
   }
 
-  @Get()
-  findAll():Promise<OrderTracking[]> {
-    return this.orderTrackingService.findAll();
+  @Get('get-one-order-tracking?')
+  getOneOrderTracking(@Query('order_id') order_id: number,@Query('user_id') user_id: number):Promise<OrderTracking> {
+    return this.orderTrackingService.getOneOrderTrack(+order_id,+user_id);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string):Promise<OrderTracking> {
-    return this.orderTrackingService.findOne(+id);
+  @Get('check-order?')
+  checkOrder(@Query('order_id') order_id: number):Promise<OrderTracking> {
+    return this.orderTrackingService.checkOrder(+order_id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOrderTrackingDto: UpdateOrderTrackingDto):Promise<OrderTracking> {
-    return this.orderTrackingService.update(+id, updateOrderTrackingDto);
+  @Get('get-order-unconfirm')
+  getOrderUnConfirm():Promise<OrderTracking[]> {
+    return this.orderTrackingService.getOrderUnConfirm();
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string):Promise<void> {
-    return this.orderTrackingService.remove(+id);
+  @Get('get-order-confirmed')
+  getOrderConfirmed():Promise<OrderTracking[]> {
+    return this.orderTrackingService.getOrderConfirmed();
   }
+
+  @Get('get-order-delivering')
+  getOrderDelivering():Promise<OrderTracking[]> {
+    return this.orderTrackingService.getOrderDelivering();
+  }
+
+  @Get('get-order-done')
+  getOrderDone():Promise<OrderTracking[]> {
+    return this.orderTrackingService.getOrderDone();
+  }
+
+  @Get('get-order-cancle')
+  getOrderCancle():Promise<OrderTracking[]> {
+    return this.orderTrackingService.getOrderCancle();
+  }
+
 }

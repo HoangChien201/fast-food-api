@@ -1,15 +1,14 @@
 import { Product } from "src/product/entities/product.entity";
 import { User } from "src/user/entities/user.entity";
-import { Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Favorite {
-    @PrimaryGeneratedColumn()
-    id:number
+    @PrimaryColumn()
+    product_id:number
 
-    @OneToMany(type => User,user => user.favorites)
-    user:User
+    @PrimaryColumn()
+    user_id:number
 
-    @OneToOne(type => Product)
-    product:Product
+
 }

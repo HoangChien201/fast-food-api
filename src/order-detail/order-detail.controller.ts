@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { OrderDetailService } from './order-detail.service';
 import { CreateOrderDetailDto } from './dto/create-order-detail.dto';
 import { UpdateOrderDetailDto } from './dto/update-order-detail.dto';
@@ -9,7 +9,7 @@ export class OrderDetailController {
   constructor(private readonly orderDetailService: OrderDetailService) {}
 
   @Post()
-  create(@Body() createOrderDetailDto: CreateOrderDetailDto):Promise<OrderDetail> {
+  create(@Body() createOrderDetailDto: Array<CreateOrderDetailDto>):Promise<string> {
     return this.orderDetailService.create(createOrderDetailDto);
   }
 
@@ -18,14 +18,21 @@ export class OrderDetailController {
     return this.orderDetailService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string):Promise<OrderDetail> {
-    return this.orderDetailService.findOne(+id);
+  @Get('/get-by-order/:id')
+  findByOrder(@Param('id') id:number):Promise<OrderDetail[]> {
+    return this.orderDetailService.findByOrder(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOrderDetailDto: UpdateOrderDetailDto):Promise<OrderDetail> {
-    return this.orderDetailService.update(+id, updateOrderDetailDto);
+  //----/get?product=1&user=2
+  @Get('/get?')
+  findOne(@Query('product') product_id: number,@Query('order') order_id: number):Promise<OrderDetail> {
+    return this.orderDetailService.findOne(product_id,order_id);
+  }
+
+  //----/update?product=1&user=2
+  @Patch('/update?')
+  update(@Query('product') product_id: number,@Query('order') order_id: number, @Body() updateOrderDetailDto: UpdateOrderDetailDto):Promise<OrderDetail> {
+    return this.orderDetailService.update(+product_id,order_id, updateOrderDetailDto);
   }
 
   @Delete(':id')
