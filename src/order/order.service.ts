@@ -24,7 +24,7 @@ export class OrderService {
     @Inject(OrderTrackingService)
     private readonly orderTrackingService: OrderTrackingService
   ) { }
-  async create(createOrderDto: CreateOrderDto): Promise<Order | string> {
+  async create(createOrderDto: CreateOrderDto): Promise<Order | any> {
 
     try {
       //lấy danh sách cart      
@@ -46,15 +46,27 @@ export class OrderService {
         .execute()
 
       //tạo order tracking
-      const ordertracking = await this.orderTrackingService.create(
+      await this.orderTrackingService.create(
         {
           status: 0,
           user_id: order.user,
           order_id: order.id
         }
       )
+
+      const {total}= await this.orderDetailRepository
+      .createQueryBuilder('od')
+      .select('SUM(od.quantity * p.price)','total')
+      .leftJoin(Product, 'p', 'od.product_id = p.id')
+      .where({
+        order_id:order.id
+      })
+      .groupBy('od.order_id')
+      .getRawOne()
+      console.log(total);
+      
         
-      return order
+      return {...order,total:total}
     } catch (error) {
       
       return 'Lỗi thêm order'+error
@@ -75,6 +87,7 @@ export class OrderService {
           user: true
         }
       });
+
       const order_detail = await this.orderDetailRepository
         .createQueryBuilder('order_detail')
         .select(['order_detail.order_id', 'order_detail.quantity'])
@@ -82,7 +95,18 @@ export class OrderService {
         .where({ order_id: order.id })
         .getMany()
 
-      return { ...order, order_details: order_detail }
+
+        //select tổng hóa đơn
+        const {total}= await this.orderDetailRepository
+        .createQueryBuilder('od')
+        .select('SUM(od.quantity * p.price)','total')
+        .leftJoin(Product, 'p', 'od.product_id = p.id')
+        .where({
+          order_id:id
+        })
+        .groupBy('od.order_id')
+        .getRawOne()
+      return { ...order, order_details: order_detail,total:total }
 
     } catch (error) {
       return "Không lấy được order"

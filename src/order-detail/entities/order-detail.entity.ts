@@ -11,5 +11,6 @@ export class OrderDetail {
     quantity:number
 
     @PrimaryColumn()
-    product_id:number
+    @OneToOne(type=>Product)
+    product_id: number
 }

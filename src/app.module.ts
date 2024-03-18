@@ -28,6 +28,7 @@ import { OrderTracking } from './order-tracking/entities/order-tracking.entity';
 import { PaymentMomoModule } from './payment-momo/payment-momo.module';
 import { MessageModule } from './message/message.module';
 import { Message } from './message/entities/message.entity';
+import { PaymentZaloModule } from './payment-zalo/payment-zalo.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -54,7 +55,8 @@ import { Message } from './message/entities/message.entity';
     OrderModule,
     AuthModule,
     PaymentMomoModule,
-    MessageModule
+    MessageModule,
+    PaymentZaloModule
   ],
   controllers: [AppController,],
   providers: [AppService],
