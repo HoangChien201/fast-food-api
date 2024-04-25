@@ -14,8 +14,17 @@ export class CartDetailService {
     private readonly cartDetailRepository:Repository<CartDetail>
   ){}
 
-  async create(createCartDetailDto: CreateCartDetailDto):Promise<CartDetail> {
-    return await this.cartDetailRepository.save(createCartDetailDto);
+  async create(createCartDetailDto: CreateCartDetailDto):Promise<any> {
+   const cartCreate= await this.cartDetailRepository.save(createCartDetailDto);
+   
+    return this.cartDetailRepository.createQueryBuilder('cd')
+    .select(['cd.quantity','cd.instruction','cd.user_id'])
+    .leftJoinAndMapOne('cd.product', Product, 'p', 'p.id = cd.product_id')
+    .where({
+      user_id:cartCreate.user_id,
+      product_id:cartCreate.product_id
+    })
+    .getOne()
   }
 
   async findAll():Promise<CartDetail[]> {
@@ -31,18 +40,21 @@ export class CartDetailService {
 
   async findByUser(user_id: number):Promise<CartDetailGetByUserRespone> {
     const cart=await this.cartDetailRepository
-    .createQueryBuilder('cart_detail')
-    .select('cart_detail.user_id','user_id')
-    .leftJoinAndMapOne('cart_detail.product', Product, 'p', 'p.id = cart_detail.product_id')
-    .addSelect('cart_detail.quantity','quantity')
-    .addSelect('cart_detail.instruction','instruction')
-    .addSelect('cart_detail.quantity * p.price','total')
+    .createQueryBuilder('cd')
+    .select(['cd.quantity','cd.instruction','cd.user_id'])
+    .leftJoinAndMapOne('cd.product', Product, 'p', 'p.id = cd.product_id')
     .where({user_id:user_id})
-    .getRawMany()
-    const cart_total=cart.reduce((prevValue,currentValue)=>{
-      return parseInt(prevValue) + parseInt(currentValue.total)
-    },0)
-    return {cart:cart,total:cart_total}
+    .getMany()
+
+    const total= await this.cartDetailRepository
+    .createQueryBuilder('cd')
+    .leftJoinAndMapOne('cd.product', Product, 'p', 'p.id = cd.product_id')
+    .select('SUM(cd.quantity * p.price)','total')
+    .getRawOne()
+    return {
+      cart,
+      total:total.total
+    }
   }
 
   async clearCart(user_id:number):Promise<string>{

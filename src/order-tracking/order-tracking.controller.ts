@@ -14,8 +14,8 @@ export class OrderTrackingController {
   }
 
   @Get('get-one-order-tracking?')
-  getOneOrderTracking(@Query('order_id') order_id: number,@Query('user_id') user_id: number):Promise<OrderTracking> {
-    return this.orderTrackingService.getOneOrderTrack(+order_id,+user_id);
+  getOneOrderTracking(@Query('order_id') order_id: number):Promise<OrderTracking> {
+    return this.orderTrackingService.getOneOrderTrack(+order_id);
   }
 
   @Get('check-order?')
@@ -36,6 +36,11 @@ export class OrderTrackingController {
   @Get('get-order-delivering')
   getOrderDelivering():Promise<OrderTracking[]> {
     return this.orderTrackingService.getOrderDelivering();
+  }
+
+  @Get('get-order-wait-delivering')
+  getOrderWaitDelivering():Promise<OrderTracking[]> {
+    return this.orderTrackingService.getOrderWaitDelivering();
   }
 
   @Get('get-order-done')

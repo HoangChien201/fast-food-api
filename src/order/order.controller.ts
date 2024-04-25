@@ -33,6 +33,11 @@ export class OrderController {
     return this.orderService.findOrderByDate(dateStart,dateEnd);
   }
 
+  @Post('/update/:id')
+  updateOrder(@Body() updateOrderDto:UpdateOrderDto,@Param('id') id:number):Promise<string>{
+    return this.orderService.update(updateOrderDto,id)
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string):Promise<void> {
     return this.orderService.remove(+id);

@@ -24,4 +24,7 @@ export class Order {
     
     @Column()
     expectedTime:string
+
+    @Column()
+    charges:number
 }

@@ -62,11 +62,10 @@ export class OrderService {
         order_id:order.id
       })
       .groupBy('od.order_id')
-      .getRawOne()
-      console.log(total);
-      
+      .getRawOne()      
         
-      return {...order,total:total}
+      return {...order,
+        total:parseInt(total)+parseInt(order.charges.toString())}
     } catch (error) {
       
       return 'Lỗi thêm order'+error
@@ -106,10 +105,14 @@ export class OrderService {
         })
         .groupBy('od.order_id')
         .getRawOne()
-      return { ...order, order_details: order_detail,total:total }
+        
+      return { ...order,
+         order_details: order_detail,
+         total:total ? parseInt(total) +parseInt(order.charges.toString()) : 0
+         }
 
     } catch (error) {
-      return "Không lấy được order"
+      return "Không lấy được order"+error
     }
   }
 
@@ -129,6 +132,27 @@ export class OrderService {
         order_date: Between(new Date(dateStart), new Date(dateEnd))
       }
     })
+  }
+
+  async update(updateOrderDto:UpdateOrderDto,id:number): Promise<string> {
+    try {
+      const order= await this.orderRepository.findOne({
+        where:{
+          id:id
+        }
+      })
+  
+      await this.orderRepository.save({
+        ...order,
+        ...updateOrderDto
+      })
+      
+      return "update success"
+    } catch (error) {
+      return "update failed"
+      
+    }
+    
   }
 
   async remove(id: number): Promise<void> {

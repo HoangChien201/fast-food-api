@@ -10,7 +10,7 @@ export class CartDetailController {
   constructor(private readonly cartDetailService: CartDetailService) {}
 
   @Post()
-  create(@Body() createCartDetailDto: CreateCartDetailDto):Promise<CartDetail> {
+  create(@Body() createCartDetailDto: CreateCartDetailDto):Promise<any> {
     return this.cartDetailService.create(createCartDetailDto);
   }
 

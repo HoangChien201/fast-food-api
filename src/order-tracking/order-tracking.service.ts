@@ -31,18 +31,19 @@ export class OrderTrackingService {
     .getOne();
   }
 
-  async getOneOrderTrack(order_id: number,user_id:number):Promise<OrderTracking> {
+  async getOneOrderTrack(order_id: number):Promise<OrderTracking> {
     return await this.orderTrackingRepository
     .createQueryBuilder('ot')
+    .select(['ot.status','ot.lastUpdateTime'])
     .leftJoinAndMapOne('ot.order',Order,'order','order.id=ot.order_id')
     .leftJoinAndMapOne('ot.user',User,'u','u.id=ot.user_id')
     .where({
       order_id:order_id,
-      user_id:user_id
     })
     .orderBy({
       lastUpdateTime:'DESC'
     })
+    .limit(1)
     .getOne();
   }
 
@@ -81,7 +82,7 @@ export class OrderTrackingService {
     .getMany();
   }
 
-  async getOrderDelivering():Promise<OrderTracking[]> {
+  async getOrderWaitDelivering():Promise<OrderTracking[]> {
     return await this.orderTrackingRepository
     .createQueryBuilder('ot')
     .select(['ot.status','ot.lastUpdateTime'])
@@ -100,7 +101,7 @@ export class OrderTrackingService {
     .getMany();
   }
 
-  async getOrderDone():Promise<OrderTracking[]> {
+  async getOrderDelivering():Promise<OrderTracking[]> {
     return await this.orderTrackingRepository
     .createQueryBuilder('ot')
     .select(['ot.status','ot.lastUpdateTime'])
@@ -119,7 +120,7 @@ export class OrderTrackingService {
     .getMany();
   }
 
-  async getOrderCancle():Promise<OrderTracking[]> {
+  async getOrderDone():Promise<OrderTracking[]> {
     return await this.orderTrackingRepository
     .createQueryBuilder('ot')
     .select(['ot.status','ot.lastUpdateTime'])
@@ -131,6 +132,25 @@ export class OrderTrackingService {
     (SELECT MAX(lastUpdateTime) AS lastUpdateTime FROM defaultdb.order_tracking GROUP BY order_id )`)
     .andWhere({
       status:4
+    })
+    .orderBy({
+      lastUpdateTime:'DESC'
+    })
+    .getMany();
+  }
+
+  async getOrderCancle():Promise<OrderTracking[]> {
+    return await this.orderTrackingRepository
+    .createQueryBuilder('ot')
+    .select(['ot.status','ot.lastUpdateTime'])
+    .leftJoinAndMapOne('ot.order',Order,'order','order.id=ot.order_id')
+    .leftJoinAndMapOne('ot.user',User,'u','u.id=ot.user_id')
+    .where(`order_id in 
+    (SELECT order_id FROM defaultdb.order_tracking GROUP BY order_id HAVING MAX(lastUpdateTime)) 
+    AND lastUpdateTime IN 
+    (SELECT MAX(lastUpdateTime) AS lastUpdateTime FROM defaultdb.order_tracking GROUP BY order_id )`)
+    .andWhere({
+      status:5
     })
     .orderBy({
       lastUpdateTime:'DESC'

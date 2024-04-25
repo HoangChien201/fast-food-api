@@ -1,5 +1,3 @@
-import { CartDetail } from "src/cart-detail/entities/cart-detail.entity";
-import { Favorite } from "src/favorite/entities/favorite.entity";
 import { Order } from "src/order/entities/order.entity";
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 @Entity()
